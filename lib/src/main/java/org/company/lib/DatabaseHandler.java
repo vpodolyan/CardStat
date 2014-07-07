@@ -345,21 +345,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      *
      * @return
      */
-    public List<BankOperationType> getAllOperationTypes() {
+    public List<BankTransactionType> getAllOperationTypes() {
 
-        List<BankOperationType> types = new ArrayList<BankOperationType>();
+        List<BankTransactionType> types = new ArrayList<BankTransactionType>();
 
         SQLiteDatabase database = this.getReadableDatabase();
-        String query = String.format("SELECT * FROM &s", BankOperationType.TABLE_NAME);
+        String query = String.format("SELECT * FROM &s", BankTransactionType.TABLE_NAME);
         Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
 
-            int id = cursor.getColumnIndex(BankOperationType.KEY_ID);
-            int name = cursor.getColumnIndex(BankOperationType.KEY_NAME);
+            int id = cursor.getColumnIndex(BankTransactionType.KEY_ID);
+            int name = cursor.getColumnIndex(BankTransactionType.KEY_NAME);
 
             do {
-                BankOperationType type = new BankOperationType();
+                BankTransactionType type = new BankTransactionType();
                 type.setId(cursor.getLong(id));
                 type.setName(cursor.getString(name));
 

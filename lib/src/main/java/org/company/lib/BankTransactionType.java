@@ -3,7 +3,7 @@ package org.company.lib;
 /**
  * Created by klayman9 on 07.07.14.
  */
-public class BankOperationType extends DatabaseObject {
+public class BankTransactionType extends DatabaseObject {
 
     /** */
     public static final String TABLE_NAME = "t_operation_type",
@@ -17,7 +17,7 @@ public class BankOperationType extends DatabaseObject {
     /**
      *
      */
-    public BankOperationType() {
+    public BankTransactionType() {
 
         super();
         m_name = "Unknown";
@@ -28,7 +28,7 @@ public class BankOperationType extends DatabaseObject {
      * @param _id
      * @param _name
      */
-    public BankOperationType(long _id, String _name) {
+    public BankTransactionType(long _id, String _name) {
 
         super(_id);
         m_name = _name;
