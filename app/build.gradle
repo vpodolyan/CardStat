@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "org.company.cardstat"
         minSdkVersion 17
-        targetSdkVersion 20
+        targetSdkVersion 17
         versionCode 1
         versionName "1.0"
     }
