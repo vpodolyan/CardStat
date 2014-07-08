@@ -5,19 +5,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsMessage;
 
+import org.company.lib.BankMessage;
+
+import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
+
 public class SmsMonitor extends BroadcastReceiver {
     private static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent != null && intent.getAction() != null &&
-                ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
-            Object[] pduArray = (Object[]) intent.getExtras().get("pdus");
-            SmsMessage[] messages = new SmsMessage[pduArray.length];
-            for (int i = 0; i < pduArray.length; i++) {
-                messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i]);
-            }
-            // Вызов сервиса для парсинга sms...
+        if (intent != null && intent.getAction() != null && ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
+            final SmsMessage[] messages = getMessagesFromIntent(intent);
+            if (messages == null)
+                return;
+            new Runnable() {
+                @Override
+                public void run() {
+                    ISmsParser parser = new FakeParser();
+                    BankMessage parsedMessage = parser.Parse(messages);
+                    if (parsedMessage != null) {
+                        // Сохранить в БД
+                        // TODO: написать сохранение в БД
+                    }
+                }
+            }.run();
         }
     }
 }
