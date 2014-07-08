@@ -9,6 +9,9 @@ import org.company.lib.BankMessage;
 
 import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
 
+/**
+ * Отслеживает SMS и отправляет их на обработку
+ */
 public class SmsMonitor extends BroadcastReceiver {
     private static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
 
@@ -29,6 +32,6 @@ public class SmsMonitor extends BroadcastReceiver {
                     }
                 }
             }.run();
-        }
+         }
     }
 }
