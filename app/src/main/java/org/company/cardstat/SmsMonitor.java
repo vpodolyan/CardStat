@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsMessage;
 
-import org.company.lib.BankMessage;
-
 import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
 
 /**

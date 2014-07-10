@@ -8,10 +8,21 @@ import android.view.MenuItem;
 
 public class MyActivity extends Activity {
 
+    private DatabaseHandler m_databaseHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+
+        m_databaseHandler = new DatabaseHandler(this);
+        if (m_databaseHandler != null) {
+            // TODO: сделать нормальные логи
+            System.out.println("good");
+        } else {
+            System.out.println("fail");
+        }
     }
 
 
