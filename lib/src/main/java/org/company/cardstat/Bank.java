@@ -11,7 +11,6 @@ public class Bank extends DatabaseObject {
     /** */
     KEY_NAME = "name";
 
-
     /** */
     private String m_name;
 

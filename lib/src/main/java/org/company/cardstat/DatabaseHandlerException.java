@@ -3,6 +3,10 @@ package org.company.cardstat;
 /**
  * Created by klayman9 on 07.07.14.
  */
+
+/**
+ *
+ */
 public class DatabaseHandlerException extends Exception {
 
     /**
