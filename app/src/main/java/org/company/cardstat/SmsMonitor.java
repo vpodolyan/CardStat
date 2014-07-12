@@ -34,7 +34,7 @@ public class SmsMonitor extends BroadcastReceiver {
                             db.addBankMessage(parsedMessage);
                         }
                         catch (DatabaseHandlerException e) {
-                            Log.e(TAG, SAVE_ERROR_STRING.concat(e.getMessage()));
+                            Log.e(TAG, SAVE_ERROR_STRING, e);
                         }
                     }
                 }
