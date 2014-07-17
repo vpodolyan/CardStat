@@ -16,12 +16,9 @@ import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
  * Отслеживает SMS и отправляет их на обработку
  */
 public class SmsMonitor extends BroadcastReceiver {
-<<<<<<< HEAD
 
     /** */
-=======
     private static final String TAG = "SmsMonitor";
->>>>>>> 24bd5fa729ce59bf549bd46d44adf81bf29ac67a
     private static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
     private static final String SAVE_ERROR_STRING = "Не удалось сохранить сообщение в БД. ";
 
@@ -164,16 +161,10 @@ public class SmsMonitor extends BroadcastReceiver {
     }
 
     @Override
-<<<<<<< HEAD
-    public void onReceive(Context context, Intent intent) {
 
-        if (intent != null && intent.getAction() != null
-                && ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
-
-=======
     public void onReceive(final Context context, Intent intent) {
         if (intent != null && intent.getAction() != null && ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
->>>>>>> 24bd5fa729ce59bf549bd46d44adf81bf29ac67a
+
             final SmsMessage[] messages = getMessagesFromIntent(intent);
             for (int i = 0; i < messages.length; i++) {
 
@@ -203,7 +194,7 @@ public class SmsMonitor extends BroadcastReceiver {
 <<<<<<< HEAD
                         // TODO: написать сохранение в БД
                     }*/
-=======
+/*
                         DatabaseHandler db = new DatabaseHandler(context);
                         try {
                             db.addBankMessage(parsedMessage);
@@ -211,8 +202,7 @@ public class SmsMonitor extends BroadcastReceiver {
                         catch (DatabaseHandlerException e) {
                             Log.e(TAG, SAVE_ERROR_STRING, e);
                         }
-                    }
->>>>>>> 24bd5fa729ce59bf549bd46d44adf81bf29ac67a
+                    }*/
                 }
             }.run();
         }
