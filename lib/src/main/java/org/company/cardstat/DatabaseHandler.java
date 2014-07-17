@@ -302,7 +302,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return
      * @throws DatabaseHandlerException
      */
-    public BankMessage getBankMessage(int _id) throws DatabaseHandlerException {
+    public BankMessage getBankMessage(long _id) throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getReadableDatabase();
 
@@ -513,7 +513,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return
      * @throws DatabaseHandlerException
      */
-    public BankTransaction getBankTransaction(int _id) throws DatabaseHandlerException {
+    public BankTransaction getBankTransaction(long _id) throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getReadableDatabase();
 
