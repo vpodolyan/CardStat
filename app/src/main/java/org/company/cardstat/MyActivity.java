@@ -10,10 +10,16 @@ import java.util.List;
 
 public class MyActivity extends Activity {
 
+    /** */
     private DatabaseHandler m_databaseHandler;
+
+    /** */
+    private SmsMonitor m_smsMonitor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        m_smsMonitor = new SmsMonitor(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);

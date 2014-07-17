@@ -722,7 +722,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public long addBankTransactionType(BankTransactionType _transactionType)
             throws DatabaseHandlerException {
 
-        return addTransactionTypeKeyword(_transactionType.getName());
+        return addBankTransactionType(_transactionType.getName());
     }
 
     /**
@@ -878,13 +878,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return
      * @throws DatabaseHandlerException
      */
-    public long addTransactionTypeKeyword(String _keyword) throws DatabaseHandlerException {
+    public long addTransactionTypeKeyword(String _keyword, long _typeId) throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
 
 
         ContentValues values = new ContentValues();
         values.put(BankTransactionTypeKeyword.KEY_WORD, _keyword);
+        values.put(BankTransactionTypeKeyword.KEY_TYPE_ID, _typeId);
 
         long id = database.insert(BankTransactionTypeKeyword.TABLE_NAME, null, values);
         if (id < 1) {
@@ -905,7 +906,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public long addTransactionTypeKeyword(BankTransactionTypeKeyword _keyword)
             throws DatabaseHandlerException {
 
-        return addTransactionTypeKeyword(_keyword.getWord());
+        return addTransactionTypeKeyword(_keyword.getWord(), _keyword.getTransactionTypeId());
     }
 
     /**
