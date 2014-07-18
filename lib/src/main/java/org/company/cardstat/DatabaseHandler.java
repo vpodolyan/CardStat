@@ -24,6 +24,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /** Имя базы данных */
     private static final String DATABASE_NAME = "CardStatDB";
 
+    /** Инициализатор **/
+    private static IDbInitializer initializer;
+
     /**
      * Конструктор класса
      * @param _context контекст
@@ -31,6 +34,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public DatabaseHandler(Context _context) {
 
         super(_context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public DatabaseHandler(Context _context, IDbInitializer _initializer) {
+        super(_context, DATABASE_NAME, null, DATABASE_VERSION);
+        initializer = _initializer;
     }
 
     @Override
@@ -70,6 +78,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         _database.execSQL(CREATE_TRANSACTION_TABLE);
         _database.execSQL(CREATE_TRANSACTION_TYPE_TABLE);
         _database.execSQL(CREATE_TRANSACTION_TYPE_KEYWORD_TABLE);
+
+        if (initializer != null)
+            initializer.InitializeDb(this);
     }
 
     @Override
