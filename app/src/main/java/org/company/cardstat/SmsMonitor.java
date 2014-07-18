@@ -191,7 +191,6 @@ public class SmsMonitor extends BroadcastReceiver {
                     BankMessage parsedMessage = parser.Parse(messages);
                     if (parsedMessage != null) {
                         // Сохранить в БД
-<<<<<<< HEAD
                         // TODO: написать сохранение в БД
                     }*/
 /*
