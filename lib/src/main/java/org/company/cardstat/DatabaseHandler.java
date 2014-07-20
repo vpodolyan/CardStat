@@ -10,11 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by klayman9 on 08.07.14.
- */
-
-/**
- *
+ * Класс для работы с базой
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -86,11 +82,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _name
-     * @param _number
-     * @return
-     * @throws DatabaseHandlerException
+     * Добавляет банк в базу данных
+     * @param _name имя банка
+     * @param _number номер телефона
+     * @return ID
+     * @throws DatabaseHandlerException что-то пошло не так
      */
     public long addBank(String _name, String _number) throws DatabaseHandlerException {
 
@@ -122,10 +118,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @return
-     * @throws DatabaseHandlerException
+     * Возвращает банк по указанному ID
+     * @param _id ID
+     * @return банк
+     * @throws DatabaseHandlerException такого банка нет
      */
     public Bank getBank(long _id) throws DatabaseHandlerException {
 
@@ -141,16 +137,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        int id = cursor.getColumnIndex(Bank.KEY_ID);
-        int name = cursor.getColumnIndex(Bank.KEY_NAME);
-        int number = cursor.getColumnIndex(Bank.KEY_NUMBER);
-
-        Bank bank = new Bank();
-        bank.setId(cursor.getLong(id));
-        bank.setName(cursor.getString(name));
-        bank.setNumber(cursor.getString(number));
+        Bank bank = getBank(cursor);
 
         database.close();
+
+        return bank;
+    }
+
+    /**
+     * Возвращает банк по указанному номеру телефона
+     * @param _number номер телефона
+     * @return банк
+     * @throws DatabaseHandlerException банк не найден
+     */
+    public Bank getBank(String _number) throws DatabaseHandlerException {
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.query(Bank.TABLE_NAME, new String[] { Bank.KEY_ID, Bank.KEY_NAME },
+                String.format("%s = ?", Bank.KEY_NUMBER), new String[] { _number },
+                null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        } else {
+            throw  new DatabaseHandlerException();
+        }
+
+        Bank bank = getBank(cursor);
 
         return bank;
     }
@@ -170,16 +184,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
 
-            int id = cursor.getColumnIndex(Bank.KEY_ID);
-            int name = cursor.getColumnIndex(Bank.KEY_NAME);
-            int number = cursor.getColumnIndex(Bank.KEY_NUMBER);
-
             do {
-                Bank bank = new Bank();
-                bank.setId(cursor.getInt(id));
-                bank.setName(cursor.getString(name));
-                bank.setNumber(cursor.getString(number));
-
+                Bank bank = getBank(cursor);
                 banks.add(bank);
 
             } while (cursor.moveToNext());
@@ -196,7 +202,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return
      * @throws DatabaseHandlerException
      */
-    private Bank getBankFromCursor(Cursor _cursor) throws DatabaseHandlerException {
+    private Bank getBank(Cursor _cursor) throws DatabaseHandlerException {
 
         int id = _cursor.getColumnIndex(Bank.KEY_ID);
         int name = _cursor.getColumnIndex(Bank.KEY_NAME);
@@ -330,17 +336,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        int id = cursor.getColumnIndex(BankMessage.KEY_ID);
-        int content = cursor.getColumnIndex(BankMessage.KEY_CONTENT);
-        int sender = cursor.getColumnIndex(BankMessage.KEY_SENDER);
-        int parsed = cursor.getColumnIndex(BankMessage.KEY_PARSED);
-
-        BankMessage message = new BankMessage();
-        message.setId(cursor.getLong(id));
-        message.setContent(cursor.getString(content));
-        message.setSender(cursor.getString(sender));
-        // TODO: любой тип в boolean
-        //message.setParsed(cursor.getInt(parsed));
+        BankMessage message = getBankMessage(cursor);
 
         database.close();
         return  message;
@@ -361,26 +357,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
 
-            int id = cursor.getColumnIndex(BankMessage.KEY_ID);
-            int content = cursor.getColumnIndex(BankMessage.KEY_CONTENT);
-            int sender = cursor.getColumnIndex(BankMessage.KEY_SENDER);
-            int parsed = cursor.getColumnIndex(BankMessage.KEY_PARSED);
-
             do {
-                BankMessage message = new BankMessage();
-                message.setId(cursor.getLong(id));
-                message.setContent(cursor.getString(content));
-                message.setSender(cursor.getString(sender));
-                // TODO: любой тип в boolean
-                //message.setParsed(_cursor.getInt(parsed));
-
+                BankMessage message = getBankMessage(cursor);
                 messages.add(message);
 
             } while (cursor.moveToNext());
         }
 
         database.close();
-
         return  messages;
     }
 
@@ -409,15 +393,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     /**
      *
-     * @throws DatabaseHandlerException
-     */
-    public void removeAllMessages() throws DatabaseHandlerException {
-
-        // TODO:
-    }
-
-    /**
-     *
      * @param _id
      * @param _content
      * @param _sender
@@ -439,7 +414,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 BankMessage.KEY_ID), new String[] { String.valueOf(_id) });
 
         database.close();
-
         return id;
     }
 
@@ -504,7 +478,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         database.close();
-
         return id;
     }
 
@@ -542,16 +515,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        int id = cursor.getColumnIndex(BankTransaction.KEY_ID);
-        int sum = cursor.getColumnIndex(BankTransaction.KEY_SUM);
-        int typeId = cursor.getColumnIndex(BankTransaction.KEY_TYPE_ID);
-        int bankId = cursor.getColumnIndex(BankTransaction.KEY_BANK_ID);
-
-        BankTransaction transaction = new BankTransaction();
-        transaction.setId(cursor.getLong(id));
-        transaction.setSum(cursor.getFloat(sum));
-        transaction.setTypeId(cursor.getLong(typeId));
-        transaction.setBankId(cursor.getLong(bankId));
+        BankTransaction transaction = getBankTransaction(cursor);
 
         database.close();
         return  transaction;
@@ -572,25 +536,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
 
-            int id = cursor.getColumnIndex(BankTransaction.KEY_ID);
-            int sum = cursor.getColumnIndex(BankTransaction.KEY_SUM);
-            int typeId = cursor.getColumnIndex(BankTransaction.KEY_TYPE_ID);
-            int bankId = cursor.getColumnIndex(BankTransaction.KEY_BANK_ID);
-
             do {
-                BankTransaction transaction = new BankTransaction();
-                transaction.setId(cursor.getLong(id));
-                transaction.setSum(cursor.getFloat(sum));
-                transaction.setTypeId(cursor.getLong(typeId));
-                transaction.setBankId(cursor.getLong(bankId));
-
+                BankTransaction transaction = getBankTransaction(cursor);
                 transactions.add(transaction);
 
             } while (cursor.moveToNext());
         }
 
         database.close();
-
         return transactions;
     }
 
@@ -759,12 +712,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        int id = cursor.getColumnIndex(BankTransactionType.KEY_ID);
-        int name = cursor.getColumnIndex(BankTransactionType.KEY_NAME);
-
-        BankTransactionType transaction = new BankTransactionType();
-        transaction.setId(cursor.getLong(id));
-        transaction.setName(cursor.getString(name));
+        BankTransactionType transaction = getBankTransactionType(cursor);
 
         database.close();
         return transaction;
@@ -785,21 +733,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
 
-            int id = cursor.getColumnIndex(BankTransactionType.KEY_ID);
-            int name = cursor.getColumnIndex(BankTransactionType.KEY_NAME);
-
             do {
-                BankTransactionType type = new BankTransactionType();
-                type.setId(cursor.getLong(id));
-                type.setName(cursor.getString(name));
-
+                BankTransactionType type = getBankTransactionType(cursor);
                 types.add(type);
 
             } while (cursor.moveToNext());
         }
 
         database.close();
-
         return types;
     }
 
@@ -945,12 +886,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        int id = cursor.getColumnIndex(BankTransactionTypeKeyword.KEY_ID);
-        int word = cursor.getColumnIndex(BankTransactionTypeKeyword.KEY_WORD);
-
-        BankTransactionTypeKeyword transactionTypeKeyword = new BankTransactionTypeKeyword();
-        transactionTypeKeyword.setId(cursor.getLong(id));
-        transactionTypeKeyword.setWord(cursor.getString(word));
+        BankTransactionTypeKeyword transactionTypeKeyword = getBankTransactionTypeKeyword(cursor);
 
         database.close();
         return transactionTypeKeyword;
@@ -976,10 +912,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             int word = cursor.getColumnIndex(BankTransactionTypeKeyword.KEY_WORD);
 
             do {
-                BankTransactionTypeKeyword keyword = new BankTransactionTypeKeyword();
-                keyword.setId(cursor.getLong(id));
-                keyword.setWord(cursor.getString(word));
-
+                BankTransactionTypeKeyword keyword = getBankTransactionTypeKeyword(cursor);
                 keywords.add(keyword);
 
             } while (cursor.moveToNext());
