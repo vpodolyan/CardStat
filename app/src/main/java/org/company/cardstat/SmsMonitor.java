@@ -1,8 +1,14 @@
 package org.company.cardstat;
 
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
@@ -160,25 +166,63 @@ public class SmsMonitor extends BroadcastReceiver {
         return message;
     }
 
-    @Override
+    /**
+     * Выводит оповещение пользователю
+     * @param context контекст
+     * @param _title заголовок оповещения
+     * @param _content содержание оповещения
+     */
+    private void showSmsNotification(final Context context, String _title, String _content) {
 
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                new Intent(context, MyActivity.class), 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(_title)
+                        .setContentText(_content);
+        mBuilder.setContentIntent(contentIntent);
+        mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+        mBuilder.setAutoCancel(true);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, mBuilder.build());
+    }
+
+    /**
+     * Выводит все данные принятого сообщения. Нужно только для отладки.
+     * @param _message сообщение
+     */
+    private void printSmsMessage(SmsMessage _message) {
+
+        System.out.println("getEmailBody: " + _message.getEmailBody());
+        System.out.println("getMessageBody: " + _message.getMessageBody());
+        System.out.println("getEmailFrom: " + _message.getEmailFrom());
+        System.out.println("getDisplayMessageBody: " + _message.getDisplayMessageBody());
+        System.out.println("getDisplayOriginatingAddress: "
+                + _message.getDisplayOriginatingAddress());
+
+        System.out.println("getOriginatingAddress: " + _message.getOriginatingAddress());
+        System.out.println("getPseudoSubject: " + _message.getPseudoSubject());
+        System.out.println("getServiceCenterAddress: "
+                + _message.getServiceCenterAddress());
+    }
+
+    @Override
     public void onReceive(final Context context, Intent intent) {
-        if (intent != null && intent.getAction() != null && ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
+        if (intent != null && intent.getAction() != null
+                && ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
+
+            showSmsNotification(context, MyActivity.APPLICATION_NAME,
+                    "Обработка входящих сообщений");
 
             final SmsMessage[] messages = getMessagesFromIntent(intent);
             for (int i = 0; i < messages.length; i++) {
 
-                System.out.println("getEmailBody: " + messages[i].getEmailBody());
-                System.out.println("getMessageBody: " + messages[i].getMessageBody());
-                System.out.println("getEmailFrom: " + messages[i].getEmailFrom());
-                System.out.println("getDisplayMessageBody: " + messages[i].getDisplayMessageBody());
-                System.out.println("getDisplayOriginatingAddress: "
-                        + messages[i].getDisplayOriginatingAddress());
-
-                System.out.println("getOriginatingAddress: " + messages[i].getOriginatingAddress());
-                System.out.println("getPseudoSubject: " + messages[i].getPseudoSubject());
-                System.out.println("getServiceCenterAddress: "
-                        + messages[i].getServiceCenterAddress());
+                printSmsMessage(messages[i]);
+                // TODO: parseSmsMessage(messages[i]);
             }
 
             if (messages == null) {

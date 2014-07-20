@@ -11,6 +11,9 @@ import java.util.List;
 public class MyActivity extends Activity {
 
     /** */
+    public static String APPLICATION_NAME = "CardStat";
+
+    /** */
     private DatabaseHandler m_databaseHandler;
 
     /** */
@@ -19,7 +22,7 @@ public class MyActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        m_smsMonitor = new SmsMonitor(this);
+        // m_smsMonitor = new SmsMonitor(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);

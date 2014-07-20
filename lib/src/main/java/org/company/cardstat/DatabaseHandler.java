@@ -88,14 +88,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      *
      * @param _name
+     * @param _number
      * @return
+     * @throws DatabaseHandlerException
      */
-    public long addBank(String _name) throws DatabaseHandlerException {
+    public long addBank(String _name, String _number) throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(Bank.KEY_NAME, _name);
+        values.put(Bank.KEY_NUMBER, _number);
 
         long id = database.insert(Bank.TABLE_NAME, null, values);
         database.close();
@@ -115,7 +118,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public long addBank(Bank _bank) throws DatabaseHandlerException {
 
-        return addBank(_bank.getName());
+        return addBank(_bank.getName(), _bank.getNumber());
     }
 
     /**
@@ -140,10 +143,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         int id = cursor.getColumnIndex(Bank.KEY_ID);
         int name = cursor.getColumnIndex(Bank.KEY_NAME);
+        int number = cursor.getColumnIndex(Bank.KEY_NUMBER);
 
         Bank bank = new Bank();
         bank.setId(cursor.getLong(id));
         bank.setName(cursor.getString(name));
+        bank.setNumber(cursor.getString(number));
 
         database.close();
 
@@ -167,11 +172,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             int id = cursor.getColumnIndex(Bank.KEY_ID);
             int name = cursor.getColumnIndex(Bank.KEY_NAME);
+            int number = cursor.getColumnIndex(Bank.KEY_NUMBER);
 
             do {
                 Bank bank = new Bank();
                 bank.setId(cursor.getInt(id));
                 bank.setName(cursor.getString(name));
+                bank.setNumber(cursor.getString(number));
 
                 banks.add(bank);
 
@@ -193,25 +200,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         int id = _cursor.getColumnIndex(Bank.KEY_ID);
         int name = _cursor.getColumnIndex(Bank.KEY_NAME);
+        int number = _cursor.getColumnIndex(Bank.KEY_NUMBER);
 
         Bank bank = new Bank();
         bank.setId(_cursor.getLong(id));
         bank.setName(_cursor.getString(name));
+        bank.setNumber(_cursor.getString(number));
 
         return bank;
     }
 
     /**
      *
+     * @param _id
+     * @param _name
+     * @param _number
      * @return
      * @throws DatabaseHandlerException
      */
-    public long updateBank(long _id, String _name) throws DatabaseHandlerException {
+    public long updateBank(long _id, String _name, String _number) throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(Bank.KEY_NAME, _name);
+        values.put(Bank.KEY_NUMBER, _number);
 
         long id = database.update(Bank.TABLE_NAME, values, String.format("%s = ?", Bank.KEY_ID),
                 new String[] { String.valueOf(_id) });
@@ -229,7 +242,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public long updateBank(Bank _bank) throws DatabaseHandlerException {
 
-        return updateBank(_bank.getId(), _bank.getName());
+        return updateBank(_bank.getId(), _bank.getName(), _bank.getNumber());
     }
 
     /**
@@ -842,7 +855,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public long updateBankTransactionType(BankTransactionType _transactionType)
             throws DatabaseHandlerException {
 
-        return updateBank(_transactionType.getId(), _transactionType.getName());
+        return updateBankTransactionType(_transactionType.getId(), _transactionType.getName());
     }
 
     /**
