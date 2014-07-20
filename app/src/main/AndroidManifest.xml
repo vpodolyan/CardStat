@@ -21,6 +21,7 @@
         <receiver android:name=".SmsMonitor">
             <intent-filter android:priority="10">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
     </application>

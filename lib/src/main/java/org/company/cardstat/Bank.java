@@ -8,11 +8,17 @@ public class Bank extends DatabaseObject {
     /** */
     public static final String TABLE_NAME = "t_bank",
 
-    /** */
-    KEY_NAME = "name";
+    /** Имя банка */
+    KEY_NAME = "name",
 
-    /** */
+    /** Номер */
+    KEY_NUMBER = "number";
+
+    /** Имя банка */
     private String m_name;
+
+    /** Номер с которого приходят сообщения */
+    private String m_number;
 
     /**
      *
@@ -50,6 +56,24 @@ public class Bank extends DatabaseObject {
     public void setName(String _name) {
 
         m_name = _name;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getNumber() {
+
+        return m_number;
+    }
+
+    /**
+     *
+     * @param _number
+     */
+    public void setNumber(String _number) {
+
+        m_number = _number;
     }
 
     @Override
