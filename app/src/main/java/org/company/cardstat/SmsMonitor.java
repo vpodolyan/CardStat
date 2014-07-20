@@ -114,7 +114,7 @@ public class SmsMonitor extends BroadcastReceiver {
 
         /** Сообщение от такого банка ещё не поступало */
         if (transaction.getId() < 0) {
-            m_databaseHandler.addBank(message.getSender());
+            m_databaseHandler.addBank("unknown", message.getSender());
         }
 
         List<BankTransactionTypeKeyword> keywords
