@@ -137,11 +137,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        Bank bank = getBank(cursor);
-
         database.close();
-
-        return bank;
+        return getBank(cursor);
     }
 
     /**
@@ -164,9 +161,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        Bank bank = getBank(cursor);
-
-        return bank;
+        return getBank(cursor);
     }
 
     /**
@@ -192,14 +187,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         database.close();
-
         return banks;
     }
 
     /**
-     *
-     * @param _cursor
-     * @return
+     * Возвращает банк из результата запроса
+     * @param _cursor результат запроса
+     * @return банк
      * @throws DatabaseHandlerException
      */
     private Bank getBank(Cursor _cursor) throws DatabaseHandlerException {
@@ -217,11 +211,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @param _name
-     * @param _number
-     * @return
+     * Обновляет банк
+     * @param _id ID
+     * @param _name имя
+     * @param _number номер
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long updateBank(long _id, String _name, String _number) throws DatabaseHandlerException {
@@ -236,14 +230,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(_id) });
 
         database.close();
-
         return id;
     }
 
     /**
-     *
-     * @param _bank
-     * @return
+     * Обновляет банк
+     * @param _bank банк
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long updateBank(Bank _bank) throws DatabaseHandlerException {
@@ -252,8 +245,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
+     * Удаляет банк из базы данных
+     * @param _id ID
      * @throws DatabaseHandlerException
      */
     public void deleteBank(long _id) throws DatabaseHandlerException {
@@ -267,8 +260,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _bank
+     * Удаляет банк из базы данных
+     * @param _bank банк
      * @throws DatabaseHandlerException
      */
     public void deleteBank(Bank _bank) throws DatabaseHandlerException {
@@ -300,14 +293,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         database.close();
-
         return id;
     }
 
     /**
-     *
-     * @param _message
-     * @return
+     * Добавляет в базу сообщение от банка
+     * @param _message сообщение
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long addBankMessage(BankMessage _message) throws DatabaseHandlerException {
@@ -316,9 +308,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @return
+     * Возвращет сообщение от банка по ID
+     * @param _id ID сообщения
+     * @return сообщение
      * @throws DatabaseHandlerException
      */
     public BankMessage getBankMessage(long _id) throws DatabaseHandlerException {
@@ -336,10 +328,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        BankMessage message = getBankMessage(cursor);
-
         database.close();
-        return  message;
+        return  getBankMessage(cursor);
     }
 
     /**
@@ -369,9 +359,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _cursor
-     * @return
+     * Возвращает сообщение от банка из результата запроса
+     * @param _cursor результат запроса
+     * @return сообщение от банка
      * @throws DatabaseHandlerException
      */
     private BankMessage getBankMessage(Cursor _cursor) throws DatabaseHandlerException {
@@ -385,19 +375,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         message.setId(_cursor.getLong(id));
         message.setContent(_cursor.getString(content));
         message.setSender(_cursor.getString(sender));
-        // TODO: любой тип в boolean
-        //message.setParsed(_cursor.getInt(parsed));
+        message.setParsed(Boolean.parseBoolean(_cursor.getString(parsed)));
 
         return message;
     }
 
     /**
-     *
-     * @param _id
-     * @param _content
-     * @param _sender
-     * @param _parsed
-     * @return
+     * Обновляет сообщение
+     * @param _id ID сообщения
+     * @param _content содержание
+     * @param _sender отправитель сообщения
+     * @param _parsed распарсено или нет
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long updateBankMessage(long _id, String _content, String _sender, boolean _parsed)
@@ -418,9 +407,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _message
-     * @return
+     * Обновялет сообщение
+     * @param _message сообщение
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long updateBankMessage(BankMessage _message) throws DatabaseHandlerException {
@@ -455,11 +444,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _sum
-     * @param _type_id
-     * @param _bank_id
-     * @return
+     * Добавляет транзакцию
+     * @param _sum сумма
+     * @param _type_id ID типа
+     * @param _bank_id ID банка
+     * @return ID транзакции
      * @throws DatabaseHandlerException
      */
     public long addBankTransaction(float _sum, long _type_id, long _bank_id)
@@ -482,9 +471,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _transaction
-     * @return
+     * Добавляет транзакцию
+     * @param _transaction транзакция
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long addBankTransaction(BankTransaction _transaction) throws DatabaseHandlerException {
@@ -494,9 +483,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @return
+     * Возвращает транзакцию по ID
+     * @param _id ID
+     * @return транзакция
      * @throws DatabaseHandlerException
      */
     public BankTransaction getBankTransaction(long _id) throws DatabaseHandlerException {
@@ -515,15 +504,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        BankTransaction transaction = getBankTransaction(cursor);
-
         database.close();
-        return  transaction;
+        return  getBankTransaction(cursor);
     }
 
     /**
-     *
-     * @return
+     * Возвращает все транзакции
+     * @return список транзакция
      * @throws DatabaseHandlerException
      */
     public List<BankTransaction> getAllTransactions() throws DatabaseHandlerException {
@@ -548,9 +535,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param cursor
-     * @return
+     * Возвращает транзакцию из результата запроса
+     * @param cursor результат запроса
+     * @return транзакция
      * @throws DatabaseHandlerException
      */
     private BankTransaction getBankTransaction(Cursor cursor) throws DatabaseHandlerException {
@@ -570,12 +557,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @param _sum
-     * @param _type_id
-     * @param _bank_id
-     * @return
+     * Обновляет транзакцию
+     * @param _id ID транзакции
+     * @param _sum сумма
+     * @param _type_id ID типа транзакции
+     * @param _bank_id ID банка
+     * @return  ID транзакции
      * @throws DatabaseHandlerException
      */
     public long updateBankTransaction(long _id, float _sum, long _type_id, long _bank_id)
@@ -592,14 +579,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 BankTransaction.KEY_ID), new String[] { String.valueOf(_id) });
 
         database.close();
-
         return id;
     }
 
     /**
-     *
-     * @param _transaction
-     * @return
+     * Обновляет транзакцию
+     * @param _transaction транзакция
+     * @return ID транзакции
      * @throws DatabaseHandlerException
      */
     public long updateBankTransaction(BankTransaction _transaction)
@@ -610,8 +596,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
+     * Удаляет транзакцию
+     * @param _id ID транзакции
      * @throws DatabaseHandlerException
      */
     public void deleteBankTransaction(long _id) throws DatabaseHandlerException {
@@ -625,8 +611,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _transaction
+     * Удаляет транзакцию
+     * @param _transaction транзакция
      * @throws DatabaseHandlerException
      */
     public void deleteBankTransaction(BankTransaction _transaction)
@@ -636,7 +622,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
+     * Удаляет из базы все транзакии
      * @throws DatabaseHandlerException
      */
     public void removeAllTransactions() throws DatabaseHandlerException {
@@ -645,7 +631,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
+     * Удаляет из базы все банки
      * @throws DatabaseHandlerException
      */
     public void removeAllBanks() throws DatabaseHandlerException {
@@ -656,9 +642,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _name
-     * @return
+     * Добавляет тип транзакции
+     * @param _name имя типа
+     * @return ID типа
      * @throws DatabaseHandlerException
      */
     public long addBankTransactionType(String _name) throws DatabaseHandlerException {
@@ -675,14 +661,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         database.close();
-
         return id;
     }
 
     /**
-     *
-     * @param _transactionType
-     * @return
+     * Добавляет тип транзакции
+     * @param _transactionType тип транзакции
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long addBankTransactionType(BankTransactionType _transactionType)
@@ -692,9 +677,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @return
+     * Возвращает тип транзакции по ID
+     * @param _id ID
+     * @return тип транзакции
      * @throws DatabaseHandlerException
      */
     public BankTransactionType getBankTransactionType(long _id) throws DatabaseHandlerException {
@@ -712,15 +697,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        BankTransactionType transaction = getBankTransactionType(cursor);
-
         database.close();
-        return transaction;
+        return getBankTransactionType(cursor);
     }
 
     /**
-     *
-     * @return
+     * Возвращает все типы транзакций
+     * @return список типов транзакций
      * @throws DatabaseHandlerException
      */
     public List<BankTransactionType> getAllBankTransactionTypes() throws DatabaseHandlerException {
@@ -745,9 +728,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param cursor
-     * @return
+     * Возвращает тип транзакции из результата запроса
+     * @param cursor результат запроса
+     * @return тип транзакции
      * @throws DatabaseHandlerException
      */
     private BankTransactionType getBankTransactionType(Cursor cursor)
@@ -760,14 +743,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         type.setId(cursor.getLong(id));
         type.setName(cursor.getString(name));
 
-        return  type;
+        return type;
     }
 
     /**
-     *
-     * @param _id
-     * @param _name
-     * @return
+     * Обновляет тип транзакции
+     * @param _id ID транзакции
+     * @param _name имя
+     * @return ID транзакции
      * @throws DatabaseHandlerException
      */
     public long updateBankTransactionType(long _id, String _name)
@@ -783,14 +766,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 BankTransactionType.KEY_ID), new String[] { String.valueOf(_id) });
 
         database.close();
-
         return id;
     }
 
     /**
-     *
-     * @param _transactionType
-     * @return
+     * Обновляет тип транзакции
+     * @param _transactionType тип транзакции
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long updateBankTransactionType(BankTransactionType _transactionType)
@@ -800,8 +782,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
+     * Удаляет тип транзакции по ID
+     * @param _id ID транзакции
      * @throws DatabaseHandlerException
      */
     public void deleteBankTransactionType(long _id) throws DatabaseHandlerException {
@@ -816,8 +798,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _bankTransactionType
+     * Удаляет тип транзакции
+     * @param _bankTransactionType тип транзакции
      * @throws DatabaseHandlerException
      */
     public void deleteBankTransactionType(BankTransactionType _bankTransactionType)
@@ -827,9 +809,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _keyword
-     * @return
+     * Добавляет ключевое слово типа транзакции
+     * @param _keyword ключевое слово
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long addTransactionTypeKeyword(String _keyword, long _typeId) throws DatabaseHandlerException {
@@ -847,14 +829,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         database.close();
-
         return id;
     }
 
     /**
-     *
-     * @param _keyword
-     * @return
+     * Добавляет ключевое слово типа транзакции
+     * @param _keyword ключевое слово типа транзакции
+     * @return ID
      * @throws DatabaseHandlerException
      */
     public long addTransactionTypeKeyword(BankTransactionTypeKeyword _keyword)
@@ -864,9 +845,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @return
+     * Возвращает ключевое слово типа транзакции
+     * @param _id ID
+     * @return ключевое слово типа транзакции
      * @throws DatabaseHandlerException
      */
     public BankTransactionTypeKeyword getTransactionTypeKeyword(long _id)
@@ -886,15 +867,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throw  new DatabaseHandlerException();
         }
 
-        BankTransactionTypeKeyword transactionTypeKeyword = getBankTransactionTypeKeyword(cursor);
-
         database.close();
-        return transactionTypeKeyword;
+        return getBankTransactionTypeKeyword(cursor);
     }
 
     /**
-     *
-     * @return
+     * Возвращает список всех ключевых слов типов ранзакций
+     * @return список всех ключевых слов типов ранзакций
      * @throws DatabaseHandlerException
      */
     public List<BankTransactionTypeKeyword> getAllTransactionTypeKeywords()
@@ -919,14 +898,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         database.close();
-
         return keywords;
     }
 
     /**
-     *
-     * @param cursor
-     * @return
+     * Возвращает ключевое слово типа транзакции из результата запроса
+     * @param cursor результат запроса
+     * @return ключевое слово
      * @throws DatabaseHandlerException
      */
     private BankTransactionTypeKeyword getBankTransactionTypeKeyword(Cursor cursor)
@@ -943,10 +921,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
-     * @param _word
-     * @return
+     * Обновляет ключевое слово типа транзакции
+     * @param _id ID
+     * @param _word ключевое слово
+     * @return ID ключевого слова
      * @throws DatabaseHandlerException
      */
     public long updateTransactionTypeKeyword(long _id, String _word)
@@ -963,14 +941,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(_id) });
 
         database.close();
-
         return id;
     }
 
     /**
-     *
-     * @param _keyword
-     * @return
+     * Обновляет ключевое слово типа транзакции
+     * @param _keyword ключевое слово типа транзакции
+     * @return ID типа
      * @throws DatabaseHandlerException
      */
     public long updateTransactionTypeKeyword(BankTransactionTypeKeyword _keyword)
@@ -980,8 +957,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _id
+     * Удаляет ключевое слово типа транзакции
+     * @param _id ID
      * @throws DatabaseHandlerException
      */
     public void deleteTransactionTypeKeyword(long _id) throws DatabaseHandlerException {
@@ -996,8 +973,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
-     * @param _keyword
+     * Удаляет ключевое слово типа транзакции
+     * @param _keyword ключевое слово типа транзакции
      * @throws DatabaseHandlerException
      */
     public void deleteTransactionTypeKeyword(BankTransactionTypeKeyword _keyword)
