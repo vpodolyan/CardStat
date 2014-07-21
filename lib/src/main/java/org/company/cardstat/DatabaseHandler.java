@@ -270,6 +270,205 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     *
+     * @param _name
+     * @param _number
+     * @param _transactionId
+     * @return
+     * @throws DatabaseHandlerException
+     */
+    public long addBankCard(String _name, String _number, long _transactionId)
+            throws DatabaseHandlerException {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BankCard.KEY_NAME, _name);
+        values.put(BankCard.KEY_NUMBER, _number);
+        values.put(BankCard.KEY_TRANSACTION_ID, _transactionId);
+
+        long id = database.insert(BankCard.TABLE_NAME, null, values);
+        database.close();
+
+        if (id < 1) {
+            throw new DatabaseHandlerException();
+        }
+
+        return id;
+    }
+
+    /**
+     *
+     * @param _card
+     * @return
+     * @throws DatabaseHandlerException
+     */
+    public long addBankCard(BankCard _card) throws DatabaseHandlerException {
+
+        return addBankCard(_card.getName(), _card.getNumber(), _card.getTransactionId());
+    }
+
+    /**
+     *
+     * @param _id
+     * @return
+     * @throws DatabaseHandlerException
+     */
+    public BankCard getBankCard(long _id) throws DatabaseHandlerException {
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.query(BankCard.TABLE_NAME,
+                new String[] { BankCard.KEY_ID, BankCard.KEY_NAME },
+                String.format("%s = ?", BankCard.KEY_ID), new String[] { String.valueOf(_id) },
+                null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        } else {
+            throw  new DatabaseHandlerException();
+        }
+
+        database.close();
+        return getBankCard(cursor);
+    }
+
+    /**
+     *
+     * @param _number
+     * @return
+     * @throws DatabaseHandlerException
+     */
+    public BankCard getBankCard(String _number) throws DatabaseHandlerException {
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.query(BankCard.TABLE_NAME,
+                new String[] { BankCard.KEY_ID, BankCard.KEY_NAME, BankCard.KEY_TRANSACTION_ID },
+                String.format("%s = ?", BankCard.KEY_NUMBER), new String[] { _number },
+                null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        } else {
+            throw  new DatabaseHandlerException();
+        }
+
+        database.close();
+        return getBankCard(cursor);
+    }
+
+    /**
+     *
+     * @return
+     * @throws DatabaseHandlerException
+     */
+    public List<BankCard> getAllBankCard() throws DatabaseHandlerException {
+
+        List<BankCard> cards = new ArrayList<BankCard>();
+
+        SQLiteDatabase database = this.getReadableDatabase();
+        String query = String.format("SELECT * FROM %s", BankCard.TABLE_NAME);
+        Cursor cursor = database.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+
+            do {
+                BankCard card = getBankCard(cursor);
+                cards.add(card);
+
+            } while (cursor.moveToNext());
+        }
+
+        database.close();
+        return cards;
+    }
+
+    /**
+     *
+     * @param _cursor
+     * @return
+     */
+    public BankCard getBankCard(Cursor _cursor) {
+
+        int id = _cursor.getColumnIndex(BankCard.KEY_ID);
+        int name = _cursor.getColumnIndex(BankCard.KEY_NAME);
+        int number = _cursor.getColumnIndex(BankCard.KEY_NUMBER);
+        int transactionId = _cursor.getColumnIndex(BankCard.KEY_TRANSACTION_ID);
+
+        BankCard card = new BankCard();
+        card.setId(_cursor.getLong(id));
+        card.setName(_cursor.getString(name));
+        card.setNumber(_cursor.getString(number));
+        card.setTransactionId(_cursor.getLong(transactionId));
+
+        return card;
+    }
+
+    /**
+     *
+     * @param _id
+     * @param _name
+     * @param _number
+     * @param _transactionId
+     * @return
+     * @throws DatabaseHandlerException
+     */
+    public long updateBankCard(long _id, String _name, String _number, long _transactionId)
+            throws DatabaseHandlerException {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BankCard.KEY_NAME, _name);
+        values.put(BankCard.KEY_NUMBER, _number);
+        values.put(BankCard.KEY_TRANSACTION_ID, _transactionId);
+
+        long id = database.update(Bank.TABLE_NAME, values, String.format("%s = ?", Bank.KEY_ID),
+                new String[] { String.valueOf(_id) });
+
+        database.close();
+        return id;
+    }
+
+    /**
+     *
+     * @param _card
+     * @return
+     * @throws DatabaseHandlerException
+     */
+    public long updateBankCard(BankCard _card) throws DatabaseHandlerException {
+
+        return updateBankCard(_card.getId(), _card.getName(), _card.getNumber(),
+                _card.getTransactionId());
+    }
+
+    /**
+     *
+     * @param _id
+     * @throws DatabaseHandlerException
+     */
+    public void deleteBankCard(long _id) throws DatabaseHandlerException {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        database.delete(BankCard.TABLE_NAME, String.format("%s = ?", BankCard.KEY_ID),
+                new String[] { String.valueOf(_id) });
+
+        database.close();
+    }
+
+    /**
+     *
+     * @param _card
+     * @throws DatabaseHandlerException
+     */
+    public void deleteBankCard(BankCard _card) throws DatabaseHandlerException {
+
+        deleteBankCard(_card.getId());
+    }
+
+    /**
      * Добавляет в базу новове сообщение.
      * @param _content полный текст сообщения.
      * @param _sender отправитель сообщения.

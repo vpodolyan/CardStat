@@ -12,10 +12,16 @@ public class BankCard extends DatabaseObject {
     KEY_NAME = "name",
 
     /** Номер */
-    KEY_NUMBER = "number";
+    KEY_NUMBER = "number",
 
     /** */
-    private long m_number;
+    KEY_TRANSACTION_ID = "transaction_id";
+
+    /** */
+    private String m_name;
+
+    /** */
+    private String m_number;
 
     /** */
     private long m_transactionId;
@@ -32,7 +38,25 @@ public class BankCard extends DatabaseObject {
      *
      * @return
      */
-    public long getNumber() {
+    public String getName() {
+
+        return m_name;
+    }
+
+    /**
+     *
+     * @param _name
+     */
+    public void setName(String _name) {
+
+        m_name = _name;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getNumber() {
 
         return m_number;
     }
@@ -41,7 +65,7 @@ public class BankCard extends DatabaseObject {
      *
      * @param _number
      */
-    public void setNumber(long _number) {
+    public void setNumber(String _number) {
 
         m_number = _number;
     }
@@ -56,7 +80,7 @@ public class BankCard extends DatabaseObject {
     }
 
     /**
-     * 
+     *
      * @param _transactionId
      */
     public void setTransactionId(long _transactionId) {
