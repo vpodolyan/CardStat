@@ -15,6 +15,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
 
@@ -128,7 +130,20 @@ public class SmsMonitor extends BroadcastReceiver {
             words.add(token.nextToken());
         }
 
-        // TODO: найти сумму(руб.) транзакции
+        /* Находим сумму с помощью Regex
+        как дробное число с двумя знаками после запятой */
+        Pattern pattern = Pattern.compile("([0-9]*(\\.|\\,)[0-9]{1,2})");
+        Matcher m = pattern.matcher(message.getContent());
+        if (m.matches())
+        {
+            transaction.setSum(Float.parseFloat(m.group(0)));
+        }
+        else
+        {
+            // TODO: Подумать на тем, как сообщать о том, что не удалось найти сумму
+            Log.e("SmsMonitor","Не удалось найти сумму транзакции в сообщении");
+            return message;
+        }
 
         /** Перебираем содержимое сообщения по словам */
         for (int i = 0; i < words.size(); i++) {
