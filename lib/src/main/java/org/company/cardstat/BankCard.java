@@ -20,24 +20,14 @@ public class BankCard extends DatabaseObject {
     /** */
     private String m_name;
 
-    /** */
-    private String m_number;
+    /** Primary Account Number - номер банковской карты */
+    private long m_number;
 
-    /** */
-    private long m_transactionId;
-
-    /**
-     *
-     */
     public BankCard() {
 
         super();
     }
 
-    /**
-     *
-     * @return
-     */
     public String getName() {
 
         return m_name;
@@ -52,39 +42,18 @@ public class BankCard extends DatabaseObject {
         m_name = _name;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getNumber() {
+    public long getNumber() {
 
         return m_number;
     }
 
     /**
      *
-     * @param _number
+     * @param _number новый номер банковской карты
      */
-    public void setNumber(String _number) {
+    public void setNumber(long _number) {
 
         m_number = _number;
     }
 
-    /**
-     *
-     * @return
-     */
-    public long getTransactionId() {
-
-        return m_transactionId;
-    }
-
-    /**
-     *
-     * @param _transactionId
-     */
-    public void setTransactionId(long _transactionId) {
-
-        m_transactionId = _transactionId;
-    }
 }

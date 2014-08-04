@@ -61,7 +61,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 BankTransactionTypeKeyword.TABLE_NAME, BankTransactionTypeKeyword.KEY_ID,
                 BankTransactionTypeKeyword.KEY_WORD, BankTransactionTypeKeyword.KEY_TYPE_ID);
 
+        String CREATE_BANK_CARD_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s (%s INTEGER PRIMARY KEY, % INTEGER, %s TEXT)", BankCard.TABLE_NAME, BankCard.KEY_ID, BankCard.KEY_NUMBER, BankCard.KEY_NAME);
+
         _database.execSQL(CREATE_BANK_TABLE);
+        _database.execSQL(CREATE_BANK_CARD_TABLE);
         _database.execSQL(CREATE_MESSAGE_TABLE);
         _database.execSQL(CREATE_TRANSACTION_TABLE);
         _database.execSQL(CREATE_TRANSACTION_TYPE_TABLE);
@@ -273,11 +276,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      *
      * @param _name
      * @param _number
-     * @param _transactionId
      * @return
      * @throws DatabaseHandlerException
      */
-    public long addBankCard(String _name, String _number, long _transactionId)
+    public long addBankCard(String _name, long _number)
             throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -285,7 +287,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(BankCard.KEY_NAME, _name);
         values.put(BankCard.KEY_NUMBER, _number);
-        values.put(BankCard.KEY_TRANSACTION_ID, _transactionId);
 
         long id = database.insert(BankCard.TABLE_NAME, null, values);
         database.close();
@@ -305,7 +306,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public long addBankCard(BankCard _card) throws DatabaseHandlerException {
 
-        return addBankCard(_card.getName(), _card.getNumber(), _card.getTransactionId());
+        return addBankCard(_card.getName(), _card.getNumber());
     }
 
     /**
@@ -344,8 +345,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getReadableDatabase();
 
         Cursor cursor = database.query(BankCard.TABLE_NAME,
-                new String[] { BankCard.KEY_ID, BankCard.KEY_NAME, BankCard.KEY_TRANSACTION_ID },
-                String.format("%s = ?", BankCard.KEY_NUMBER), new String[] { _number },
+                new String[]{BankCard.KEY_ID, BankCard.KEY_NAME, BankCard.KEY_TRANSACTION_ID},
+                String.format("%s = ?", BankCard.KEY_NUMBER), new String[]{_number},
                 null, null, null, null);
 
         if (cursor != null) {
@@ -399,9 +400,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         BankCard card = new BankCard();
         card.setId(_cursor.getLong(id));
         card.setName(_cursor.getString(name));
-        card.setNumber(_cursor.getString(number));
-        card.setTransactionId(_cursor.getLong(transactionId));
-
+        card.setNumber(_cursor.getLong(number));
         return card;
     }
 
@@ -410,11 +409,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param _id
      * @param _name
      * @param _number
-     * @param _transactionId
      * @return
      * @throws DatabaseHandlerException
      */
-    public long updateBankCard(long _id, String _name, String _number, long _transactionId)
+    public long updateBankCard(long _id, String _name, long _number)
             throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -422,7 +420,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(BankCard.KEY_NAME, _name);
         values.put(BankCard.KEY_NUMBER, _number);
-        values.put(BankCard.KEY_TRANSACTION_ID, _transactionId);
 
         long id = database.update(Bank.TABLE_NAME, values, String.format("%s = ?", Bank.KEY_ID),
                 new String[] { String.valueOf(_id) });
@@ -439,8 +436,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public long updateBankCard(BankCard _card) throws DatabaseHandlerException {
 
-        return updateBankCard(_card.getId(), _card.getName(), _card.getNumber(),
-                _card.getTransactionId());
+        return updateBankCard(_card.getId(), _card.getName(), _card.getNumber());
     }
 
     /**
@@ -516,10 +512,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase database = this.getReadableDatabase();
 
-        Cursor cursor = database.query(BankMessage.TABLE_NAME, new String[] { BankMessage.KEY_ID,
-                BankMessage.KEY_CONTENT, BankMessage.KEY_SENDER, BankMessage.KEY_PARSED},
-                String.format("%s = ?", BankMessage.KEY_ID), new String[] { String.valueOf(_id) },
-                null, null, null, null);
+        Cursor cursor = database.query(BankMessage.TABLE_NAME, new String[]{BankMessage.KEY_ID,
+                        BankMessage.KEY_CONTENT, BankMessage.KEY_SENDER, BankMessage.KEY_PARSED},
+                String.format("%s = ?", BankMessage.KEY_ID), new String[]{String.valueOf(_id)},
+                null, null, null, null
+        );
 
         if (cursor != null) {
             cursor.moveToFirst();
