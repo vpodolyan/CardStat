@@ -34,8 +34,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         /** bank (id, name) */
         String CREATE_BANK_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( " +
-                "%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT )", Bank.TABLE_NAME,
-                Bank.KEY_ID, Bank.KEY_NAME);
+                "%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)", Bank.TABLE_NAME,
+                Bank.KEY_ID, Bank.KEY_NAME, Bank.KEY_NUMBER);
 
         /** message (id, content, sender, parsed) */
         String CREATE_MESSAGE_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( " +
@@ -61,7 +61,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 BankTransactionTypeKeyword.TABLE_NAME, BankTransactionTypeKeyword.KEY_ID,
                 BankTransactionTypeKeyword.KEY_WORD, BankTransactionTypeKeyword.KEY_TYPE_ID);
 
-        String CREATE_BANK_CARD_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s (%s INTEGER PRIMARY KEY, % INTEGER, %s TEXT)", BankCard.TABLE_NAME, BankCard.KEY_ID, BankCard.KEY_NUMBER, BankCard.KEY_NAME);
+        String CREATE_BANK_CARD_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s TEXT)",
+                BankCard.TABLE_NAME, BankCard.KEY_ID, BankCard.KEY_NUMBER, BankCard.KEY_NAME);
 
         _database.execSQL(CREATE_BANK_TABLE);
         _database.execSQL(CREATE_BANK_CARD_TABLE);
@@ -130,7 +131,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase database = this.getReadableDatabase();
 
-        Cursor cursor = database.query(Bank.TABLE_NAME, new String[] { Bank.KEY_ID, Bank.KEY_NAME },
+        Cursor cursor = database.query(Bank.TABLE_NAME, new String[] { Bank.KEY_ID, Bank.KEY_NAME, Bank.KEY_NUMBER },
                 String.format("%s = ?", Bank.KEY_ID), new String[] { String.valueOf(_id) },
                 null, null, null, null);
 
@@ -311,17 +312,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     /**
      *
-     * @param _id
+     * @param _number Номер банковской карты
      * @return
      * @throws DatabaseHandlerException
      */
-    public BankCard getBankCard(long _id) throws DatabaseHandlerException {
+    public BankCard getBankCard(long _number) throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getReadableDatabase();
 
         Cursor cursor = database.query(BankCard.TABLE_NAME,
-                new String[] { BankCard.KEY_ID, BankCard.KEY_NAME },
-                String.format("%s = ?", BankCard.KEY_ID), new String[] { String.valueOf(_id) },
+                null,
+                String.format("%s = ?", BankCard.KEY_NUMBER), new String[] { String.valueOf( _number ) },
                 null, null, null, null);
 
         if (cursor != null) {
@@ -345,7 +346,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getReadableDatabase();
 
         Cursor cursor = database.query(BankCard.TABLE_NAME,
-                new String[]{BankCard.KEY_ID, BankCard.KEY_NAME, BankCard.KEY_TRANSACTION_ID},
+                new String[]{BankCard.KEY_ID, BankCard.KEY_NAME},
                 String.format("%s = ?", BankCard.KEY_NUMBER), new String[]{_number},
                 null, null, null, null);
 
@@ -395,7 +396,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int id = _cursor.getColumnIndex(BankCard.KEY_ID);
         int name = _cursor.getColumnIndex(BankCard.KEY_NAME);
         int number = _cursor.getColumnIndex(BankCard.KEY_NUMBER);
-        int transactionId = _cursor.getColumnIndex(BankCard.KEY_TRANSACTION_ID);
 
         BankCard card = new BankCard();
         card.setId(_cursor.getLong(id));

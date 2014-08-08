@@ -39,6 +39,13 @@ public class DatabaseHandlerTests extends AndroidTestCase {
         assertEquals(stored.getSum(), origin.getSum());
     }
 
+    public void testAddBankCard() throws Exception {
+        long number = 5111;
+        db.addBankCard("test card", number);
+        BankCard storedCard = db.getBankCard(number);
+        assertEquals(5111, storedCard.getNumber());
+    }
+
     public void tearDown() throws Exception{
         db.close();
         super.tearDown();

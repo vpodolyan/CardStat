@@ -12,10 +12,7 @@ public class BankCard extends DatabaseObject {
     KEY_NAME = "name",
 
     /** Номер */
-    KEY_NUMBER = "number",
-
-    /** */
-    KEY_TRANSACTION_ID = "transaction_id";
+    KEY_NUMBER = "number";
 
     /** */
     private String m_name;
