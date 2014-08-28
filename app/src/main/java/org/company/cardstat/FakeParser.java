@@ -16,8 +16,8 @@ public class FakeParser implements ISmsParser {
      * @return
      */
     @Override
-    public BankMessage Parse(SmsMessage message) {
+    public ParsedMessage Parse(SmsMessage message) {
 
-        return new BankMessage();
+        return new ParsedMessage();
     }
 }

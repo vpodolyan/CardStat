@@ -105,14 +105,14 @@ public class SmsMonitor extends BroadcastReceiver {
 
         BankTransaction transaction = new BankTransaction();
 
-        /** Ищем банк, который отправил сообщение */
+        /** Ищем банк, который отправил сообщение
         List<Bank> banks = m_databaseHandler.getAllBanks();
         for (int j = 0; j < banks.size(); j++) {
 
             if (banks.get(j).getName() == message.getSender()) {
                 transaction.setBankId(banks.get(j).getId());
             }
-        }
+        }*/
 
         /** Сообщение от такого банка ещё не поступало */
         if (transaction.getId() < 0) {

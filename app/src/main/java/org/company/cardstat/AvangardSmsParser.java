@@ -2,9 +2,11 @@ package org.company.cardstat;
 
 import android.telephony.SmsMessage;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AvangardSmsParser implements ISmsParser {
+public class AvangardSmsParser  implements ISmsParser
+{
     /**
      * @param message
      */
@@ -12,12 +14,23 @@ public class AvangardSmsParser implements ISmsParser {
 
 
     @Override
-    public BankMessage Parse(SmsMessage message) {
-        // Определить тип транзакции
-        // Найти номер карточки
-        // Определить назначение
-        // Определить сумму
-        // Вернуть объект BankMessage
-        return null;
+    public ParsedMessage Parse(SmsMessage msg) throws ParseSmsException {
+
+        Matcher m = BUY_PATTERN.matcher(msg.getMessageBody());
+
+        if (m.matches())
+        {
+            ParsedMessage parsedMsg = new ParsedMessage();
+            // Определить тип транзакции
+            parsedMsg.transactionName = "Оплата";
+            // Найти номер карточки
+            parsedMsg.card = Integer.parseInt(m.group(3));
+            // Определить назначение
+            parsedMsg.destination = m.group(0);
+            // Определить сумму
+            parsedMsg.sum = Double.parseDouble(m.group(1));
+            return parsedMsg;
+        }
+        throw new ParseSmsException("Не удалось распарситть сообщение");
     }
 }

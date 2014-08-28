@@ -45,9 +45,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         /** transaction (id, sum, type_id, bank_id) */
         String CREATE_TRANSACTION_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( " +
-                "%s INTEGER PRIMARY KEY AUTOINCREMENT, %s FLOAT, %s INTEGER, %s INTEGER )",
+                "%s INTEGER PRIMARY KEY AUTOINCREMENT, %s FLOAT, %s INTEGER, %s INTEGER, %s TEXT )",
                 BankTransaction.TABLE_NAME, BankTransaction.KEY_ID, BankTransaction.KEY_SUM,
-                BankTransaction.KEY_TYPE_ID, BankTransaction.KEY_BANK_ID);
+                BankTransaction.KEY_TYPE_ID, BankTransaction.KEY_CARD_ID, BankTransaction.KEY_DESTINATION);
 
         /** transaction_type (id, name) */
         String CREATE_TRANSACTION_TYPE_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( " +
@@ -643,11 +643,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * Добавляет транзакцию
      * @param _sum сумма
      * @param _type_id ID типа
-     * @param _bank_id ID банка
+     * @param _card_id ID карты
      * @return ID транзакции
      * @throws DatabaseHandlerException
      */
-    public long addBankTransaction(float _sum, long _type_id, long _bank_id)
+    public long addBankTransaction(float _sum, long _type_id, long _card_id)
             throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -655,7 +655,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(BankTransaction.KEY_SUM, _sum);
         values.put(BankTransaction.KEY_TYPE_ID, _type_id);
-        values.put(BankTransaction.KEY_BANK_ID, _bank_id);
+        values.put(BankTransaction.KEY_CARD_ID, _card_id);
 
         long id = database.insert(BankTransaction.TABLE_NAME, null, values);
         if (id < 1) {
@@ -675,7 +675,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public long addBankTransaction(BankTransaction _transaction) throws DatabaseHandlerException {
 
         return addBankTransaction(_transaction.getSum(), _transaction.getTypeId(),
-                _transaction.getBankId());
+                _transaction.getCardId());
     }
 
     /**
@@ -690,7 +690,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = database.query(BankTransaction.TABLE_NAME,
                 new String[] { BankTransaction.KEY_ID, BankTransaction.KEY_SUM,
-                BankTransaction.KEY_TYPE_ID, BankTransaction.KEY_BANK_ID}, String.format("%s = ?",
+                BankTransaction.KEY_TYPE_ID, BankTransaction.KEY_CARD_ID}, String.format("%s = ?",
                 BankTransaction.KEY_ID), new String[] { String.valueOf(_id) },
                 null, null, null, null);
 
@@ -741,13 +741,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int id = cursor.getColumnIndex(BankTransaction.KEY_ID);
         int sum = cursor.getColumnIndex(BankTransaction.KEY_SUM);
         int typeId = cursor.getColumnIndex(BankTransaction.KEY_TYPE_ID);
-        int bankId = cursor.getColumnIndex(BankTransaction.KEY_BANK_ID);
+        int bankId = cursor.getColumnIndex(BankTransaction.KEY_CARD_ID);
 
         BankTransaction transaction = new BankTransaction();
         transaction.setId(cursor.getLong(id));
         transaction.setSum(cursor.getFloat(sum));
         transaction.setTypeId(cursor.getLong(typeId));
-        transaction.setBankId(cursor.getLong(bankId));
+        transaction.setCardId(cursor.getLong(bankId));
 
         return transaction;
     }
@@ -757,11 +757,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @param _id ID транзакции
      * @param _sum сумма
      * @param _type_id ID типа транзакции
-     * @param _bank_id ID банка
+     * @param _card_id ID банка
      * @return  ID транзакции
      * @throws DatabaseHandlerException
      */
-    public long updateBankTransaction(long _id, float _sum, long _type_id, long _bank_id)
+    public long updateBankTransaction(long _id, float _sum, long _type_id, long _card_id)
             throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -769,7 +769,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(BankTransaction.KEY_SUM, _sum);
         values.put(BankTransaction.KEY_TYPE_ID, _type_id);
-        values.put(BankTransaction.KEY_BANK_ID, _bank_id);
+        values.put(BankTransaction.KEY_CARD_ID, _card_id);
 
         long id = database.update(BankTransaction.TABLE_NAME, values, String.format("%s = ?",
                 BankTransaction.KEY_ID), new String[] { String.valueOf(_id) });
@@ -788,7 +788,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             throws DatabaseHandlerException {
 
         return updateBankTransaction(_transaction.getId(), _transaction.getSum(),
-                _transaction.getTypeId(), _transaction.getBankId());
+                _transaction.getTypeId(), _transaction.getCardId());
     }
 
     /**

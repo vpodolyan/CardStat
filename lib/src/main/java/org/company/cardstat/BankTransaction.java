@@ -19,16 +19,19 @@ public class BankTransaction extends DatabaseObject {
     KEY_TYPE_ID = "type_id",
 
     /** */
-    KEY_BANK_ID = "bank_id";
+    KEY_CARD_ID = "card_id",
+
+    KEY_DESTINATION = "destination";
 
     /** */
-    private float m_sum;
+    private float mSum;
 
     /** */
-    private long m_typeId;
+    private long mTypeId;
 
-    /** */
-    private long m_bankId;
+    private long mCardId;
+
+    private String mDestination;
 
     /**
      *
@@ -36,9 +39,9 @@ public class BankTransaction extends DatabaseObject {
     public BankTransaction() {
 
         super();
-        m_sum = 0.0f;
-        m_typeId = -1;
-        m_bankId = -1;
+        mSum = 0.0f;
+        mTypeId = -1;
+        mCardId = -1;
     }
 
     /**
@@ -46,14 +49,14 @@ public class BankTransaction extends DatabaseObject {
      * @param _id
      * @param _sum
      * @param _type_id
-     * @param _bank_id
+     * @param _card_id
      */
-    public BankTransaction(long _id, float _sum, int _type_id, int _bank_id) {
+    public BankTransaction(long _id, float _sum, int _type_id, int _card_id) {
 
         super(_id);
-        m_sum = _sum;
-        m_typeId = _type_id;
-        m_bankId = _bank_id;
+        mSum = _sum;
+        mTypeId = _type_id;
+        mCardId = _card_id;
     }
 
     /**
@@ -80,7 +83,7 @@ public class BankTransaction extends DatabaseObject {
      */
     public float getSum() {
 
-        return m_sum;
+        return mSum;
     }
 
     /**
@@ -89,7 +92,7 @@ public class BankTransaction extends DatabaseObject {
      */
     public void setSum(float _sum) {
 
-        m_sum = _sum;
+        mSum = _sum;
     }
 
     /**
@@ -98,7 +101,7 @@ public class BankTransaction extends DatabaseObject {
      */
     public long getTypeId() {
 
-        return m_typeId;
+        return mTypeId;
     }
 
     /**
@@ -107,24 +110,34 @@ public class BankTransaction extends DatabaseObject {
      */
     public void setTypeId(long _typeId) {
 
-        m_typeId = _typeId;
+        mTypeId = _typeId;
     }
 
     /**
      *
      * @return
      */
-    public long getBankId() {
+    public long getCardId() {
 
-        return m_bankId;
+        return mCardId;
     }
 
     /**
      *
      * @param _bankId
      */
-    public void setBankId(long _bankId) {
+    public void setCardId(long _bankId) {
 
-        m_bankId = _bankId;
+        mCardId = _bankId;
+    }
+
+    public String getDestination()
+    {
+        return mDestination;
+    }
+
+    public void setDestination(String _dest)
+    {
+        mDestination = _dest;
     }
 }
