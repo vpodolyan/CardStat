@@ -31,6 +31,6 @@ public class AvangardSmsParser  implements ISmsParser
             parsedMsg.sum = Double.parseDouble(m.group(1));
             return parsedMsg;
         }
-        throw new ParseSmsException("Не удалось распарситть сообщение");
+        throw new ParseSmsException("Не удалось распарсить сообщение");
     }
 }
