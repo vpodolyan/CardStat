@@ -1,8 +1,10 @@
-package org.company.cardstat;
+package org.company.cardstat.domain;
 
 /**
  * Created by klayman9 on 07.07.14.
  */
+
+import org.company.cardstat.DatabaseHandlerException;
 
 /**
  *
@@ -13,7 +15,7 @@ public interface IDatabaseObject {
      *
      * @param _object
      * @return
-     * @throws DatabaseHandlerException
+     * @throws org.company.cardstat.DatabaseHandlerException
      */
     public long add(DatabaseObject _object) throws DatabaseHandlerException;
 
@@ -21,7 +23,7 @@ public interface IDatabaseObject {
      *
      * @param _id
      * @return
-     * @throws DatabaseHandlerException
+     * @throws org.company.cardstat.DatabaseHandlerException
      */
     public DatabaseObject get(long _id) throws DatabaseHandlerException;
 
@@ -29,21 +31,21 @@ public interface IDatabaseObject {
      *
      * @param _object
      * @return
-     * @throws DatabaseHandlerException
+     * @throws org.company.cardstat.DatabaseHandlerException
      */
     public long update(DatabaseObject _object) throws DatabaseHandlerException;
 
     /**
      *
      * @param _id
-     * @throws DatabaseHandlerException
+     * @throws org.company.cardstat.DatabaseHandlerException
      */
     public void delete(int _id) throws DatabaseHandlerException;
 
     /**
      *
      * @param _object
-     * @throws DatabaseHandlerException
+     * @throws org.company.cardstat.DatabaseHandlerException
      */
     public void delete(DatabaseObject _object) throws DatabaseHandlerException;
 }

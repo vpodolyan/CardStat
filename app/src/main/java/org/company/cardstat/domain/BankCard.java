@@ -1,4 +1,4 @@
-package org.company.cardstat;
+package org.company.cardstat.domain;
 
 /**
  * Created by klayman9 on 22.07.14.

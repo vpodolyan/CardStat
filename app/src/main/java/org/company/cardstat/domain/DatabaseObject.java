@@ -1,4 +1,4 @@
-package org.company.cardstat;
+package org.company.cardstat.domain;
 
 /**
  * Created by klayman9 on 07.07.14.
@@ -32,7 +32,7 @@ public abstract class DatabaseObject {
      *
      * @return
      */
-    protected long getId() {
+    public long getId() {
 
         return m_id;
     }
@@ -41,7 +41,7 @@ public abstract class DatabaseObject {
      *
      * @param _id
      */
-    protected void setId(long _id) {
+    public void setId(long _id) {
 
         m_id = _id;
     }

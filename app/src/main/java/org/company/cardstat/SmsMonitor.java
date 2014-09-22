@@ -1,16 +1,19 @@
 package org.company.cardstat;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.util.Log;
+
+import org.company.cardstat.domain.BankMessage;
+import org.company.cardstat.domain.BankTransaction;
+import org.company.cardstat.domain.BankTransactionType;
+import org.company.cardstat.domain.BankTransactionTypeKeyword;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +161,6 @@ public class SmsMonitor extends BroadcastReceiver {
                     BankTransactionType type = m_databaseHandler
                             .getBankTransactionType(keyword.getTransactionTypeId());
 
-                    transaction.setTypeId(type.getId());
 
                     message.setParsed(true);
                     break;
