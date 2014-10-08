@@ -14,9 +14,9 @@ public class AvangardSmsParser  implements ISmsParser
 
 
     @Override
-    public ParsedMessage Parse(SmsMessage msg) throws ParseSmsException {
+    public ParsedMessage Parse(String msg) throws ParseSmsException {
 
-        Matcher m = BUY_PATTERN.matcher(msg.getMessageBody());
+        Matcher m = BUY_PATTERN.matcher(msg);
 
         if (m.matches())
         {

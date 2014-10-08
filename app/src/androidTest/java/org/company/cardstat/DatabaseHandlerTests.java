@@ -3,6 +3,8 @@ package org.company.cardstat;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
+import org.company.cardstat.domain.*;
+
 public class DatabaseHandlerTests extends AndroidTestCase {
     private DatabaseHandler db;
 

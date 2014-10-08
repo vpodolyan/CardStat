@@ -7,7 +7,7 @@ package org.company.cardstat.domain;
 /**
  *
  */
-public class BankTransactionType extends DatabaseObject {
+public class TransactionType extends DatabaseObject {
 
     /** */
     public static final String TABLE_NAME = "t_operation_type",
@@ -21,7 +21,7 @@ public class BankTransactionType extends DatabaseObject {
     /**
      *
      */
-    public BankTransactionType() {
+    public TransactionType() {
 
         super();
         m_name = "Unknown";
@@ -32,7 +32,7 @@ public class BankTransactionType extends DatabaseObject {
      * @param _id
      * @param _name
      */
-    public BankTransactionType(long _id, String _name) {
+    public TransactionType(long _id, String _name) {
 
         super(_id);
         m_name = _name;

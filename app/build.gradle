@@ -18,9 +18,14 @@ android {
     }
     productFlavors {
     }
+    sourceSets {
+        instrumentTest.setRoot("src/androidTest")
+    }
 }
 
 dependencies {
+    compile 'junit:junit:4.11'
+    compile 'com.android.support:support-v4:18.0.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:support-v4:18.0.+"
 }
+

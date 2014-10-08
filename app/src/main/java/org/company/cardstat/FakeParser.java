@@ -8,15 +8,8 @@ import java.util.List;
  * Фейковый парсер для тестирования и заглушек
  */
 public class FakeParser implements ISmsParser {
-
-
-    /**
-     *
-     * @param message
-     * @return
-     */
     @Override
-    public ParsedMessage Parse(SmsMessage message) {
+    public ParsedMessage Parse(String message) {
 
         return new ParsedMessage();
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.company.cardstat.domain.*;
 
@@ -53,8 +54,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         /** transaction_type (id, name) */
         String CREATE_TRANSACTION_TYPE_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( " +
-                "%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT )", BankTransactionType.TABLE_NAME,
-                BankTransactionType.KEY_ID, BankTransactionType.KEY_NAME);
+                "%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT )", TransactionType.TABLE_NAME,
+                TransactionType.KEY_ID, TransactionType.KEY_NAME);
 
         /** transaction_type_keyword (id, word, transaction_type_id) */
         String CREATE_TRANSACTION_TYPE_KEYWORD_TABLE
@@ -80,7 +81,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         _database.execSQL(String.format("DROP TABLE IF EXISTS %s", Bank.TABLE_NAME));
         _database.execSQL(String.format("DROP TABLE IF EXISTS %s", BankMessage.TABLE_NAME));
         _database.execSQL(String.format("DROP TABLE IF EXISTS %s", BankTransaction.TABLE_NAME));
-        _database.execSQL(String.format("DROP TABLE IF EXISTS %s", BankTransactionType.TABLE_NAME));
+        _database.execSQL(String.format("DROP TABLE IF EXISTS %s", TransactionType.TABLE_NAME));
         _database.execSQL(String.format("DROP TABLE IF EXISTS %s",
                 BankTransactionTypeKeyword.TABLE_NAME));
 
@@ -851,9 +852,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         ContentValues values = new ContentValues();
-        values.put(BankTransactionType.KEY_NAME, _name);
+        values.put(TransactionType.KEY_NAME, _name);
 
-        long id = database.insert(BankTransactionType.TABLE_NAME, null, values);
+        long id = database.insert(TransactionType.TABLE_NAME, null, values);
         if (id < 1) {
             throw new DatabaseHandlerException();
         }
@@ -868,7 +869,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return ID
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    public long addBankTransactionType(BankTransactionType _transactionType)
+    public long addBankTransactionType(TransactionType _transactionType)
             throws DatabaseHandlerException {
 
         return addBankTransactionType(_transactionType.getName());
@@ -880,13 +881,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return тип транзакции
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    public BankTransactionType getBankTransactionType(long _id) throws DatabaseHandlerException {
+    public TransactionType getTransactionType(long _id) throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getReadableDatabase();
 
-        Cursor cursor = database.query(BankTransactionType.TABLE_NAME,
-                new String[] { BankTransactionType.KEY_ID, BankTransactionType.KEY_NAME },
-                String.format("%s = ?", BankTransactionType.KEY_ID),
+        Cursor cursor = database.query(TransactionType.TABLE_NAME,
+                new String[] { TransactionType.KEY_ID, TransactionType.KEY_NAME },
+                String.format("%s = ?", TransactionType.KEY_ID),
                 new String[] { String.valueOf(_id) }, null, null, null, null);
 
         if (cursor != null) {
@@ -900,22 +901,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Возвращает тип транзакции по ее названию
+     * @param name название типа транзакции
+     * @return объект типа транзакции; null, если не найден
+     * @throws DatabaseHandlerException
+     */
+    public TransactionType getTransactionType(String name)  {
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.query(TransactionType.TABLE_NAME,
+                new String[] {TransactionType.KEY_ID, TransactionType.KEY_NAME},
+                String.format("%s = ?", TransactionType.KEY_NAME),
+                new String[] { String.valueOf(name)}, null, null, null, null);
+
+        if (cursor == null)
+            return null;
+
+        cursor.moveToFirst();
+        database.close();
+
+        try {
+            return getBankTransactionType(cursor);
+        }
+        catch (DatabaseHandlerException e)
+        {
+            Log.e("CardStat", "Ошибка в методе getTransactionType. " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Возвращает все типы транзакций
      * @return список типов транзакций
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    public List<BankTransactionType> getAllBankTransactionTypes() throws DatabaseHandlerException {
+    public List<TransactionType> getAllBankTransactionTypes() throws DatabaseHandlerException {
 
-        List<BankTransactionType> types = new ArrayList<BankTransactionType>();
+        List<TransactionType> types = new ArrayList<TransactionType>();
 
         SQLiteDatabase database = this.getReadableDatabase();
-        String query = String.format("SELECT * FROM %s", BankTransactionType.TABLE_NAME);
+        String query = String.format("SELECT * FROM %s", TransactionType.TABLE_NAME);
         Cursor cursor = database.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
 
             do {
-                BankTransactionType type = getBankTransactionType(cursor);
+                TransactionType type = getBankTransactionType(cursor);
                 types.add(type);
 
             } while (cursor.moveToNext());
@@ -931,13 +962,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return тип транзакции
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    private BankTransactionType getBankTransactionType(Cursor cursor)
+    private TransactionType getBankTransactionType(Cursor cursor)
             throws DatabaseHandlerException {
 
-        int id = cursor.getColumnIndex(BankTransactionType.KEY_ID);
-        int name = cursor.getColumnIndex(BankTransactionType.KEY_NAME);
+        int id = cursor.getColumnIndex(TransactionType.KEY_ID);
+        int name = cursor.getColumnIndex(TransactionType.KEY_NAME);
 
-        BankTransactionType type = new BankTransactionType();
+        TransactionType type = new TransactionType();
         type.setId(cursor.getLong(id));
         type.setName(cursor.getString(name));
 
@@ -957,11 +988,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(BankTransactionType.KEY_NAME, _name);
+        values.put(TransactionType.KEY_NAME, _name);
 
 
-        long id = database.update(BankTransactionType.TABLE_NAME, values, String.format("%s = ?",
-                BankTransactionType.KEY_ID), new String[] { String.valueOf(_id) });
+        long id = database.update(TransactionType.TABLE_NAME, values, String.format("%s = ?",
+                TransactionType.KEY_ID), new String[] { String.valueOf(_id) });
 
         database.close();
         return id;
@@ -973,7 +1004,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return ID
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    public long updateBankTransactionType(BankTransactionType _transactionType)
+    public long updateBankTransactionType(TransactionType _transactionType)
             throws DatabaseHandlerException {
 
         return updateBankTransactionType(_transactionType.getId(), _transactionType.getName());
@@ -988,8 +1019,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase database = this.getWritableDatabase();
 
-        database.delete(BankTransactionType.TABLE_NAME,
-                String.format("%s = ?", BankTransactionType.KEY_ID),
+        database.delete(TransactionType.TABLE_NAME,
+                String.format("%s = ?", TransactionType.KEY_ID),
                 new String[] { String.valueOf(_id) });
 
         database.close();
@@ -997,13 +1028,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     /**
      * Удаляет тип транзакции
-     * @param _bankTransactionType тип транзакции
+     * @param _TransactionType тип транзакции
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    public void deleteBankTransactionType(BankTransactionType _bankTransactionType)
+    public void deleteBankTransactionType(TransactionType _TransactionType)
             throws DatabaseHandlerException {
 
-        deleteBank(_bankTransactionType.getId());
+        deleteBank(_TransactionType.getId());
     }
 
     /**

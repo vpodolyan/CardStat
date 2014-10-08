@@ -43,7 +43,7 @@ public class MyActivity extends Activity {
             List<Bank> banks = m_databaseHandler.getAllBanks();
             List<BankMessage> messages = m_databaseHandler.getAllBankMessages();
             List<BankTransaction> transactions = m_databaseHandler.getAllTransactions();
-            List<BankTransactionType> types = m_databaseHandler.getAllBankTransactionTypes();
+            List<TransactionType> types = m_databaseHandler.getAllBankTransactionTypes();
             //List<BankTransactionTypeKeyword> keywords = m_databaseHandler.get
 
             System.out.println("=========Банки:=========");

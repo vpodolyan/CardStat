@@ -8,18 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
-import android.util.Log;
-
-import org.company.cardstat.domain.BankMessage;
-import org.company.cardstat.domain.BankTransaction;
-import org.company.cardstat.domain.BankTransactionType;
-import org.company.cardstat.domain.BankTransactionTypeKeyword;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
 
@@ -95,95 +83,6 @@ public class SmsMonitor extends BroadcastReceiver {
     }
 
     /**
-     * Собственно сам парсинг сообщения.
-     * TODO: это можно вынести в отдельный класс парсера, но пока пусть будет так)
-     * @param _message
-     * @return
-     */
-    private BankMessage parseSmsMessage(SmsMessage _message) throws DatabaseHandlerException {
-
-        BankMessage message = new BankMessage();
-        message.setContent(_message.getMessageBody());
-        message.setSender(_message.getOriginatingAddress());
-
-        BankTransaction transaction = new BankTransaction();
-
-        /** Ищем банк, который отправил сообщение
-        List<Bank> banks = m_databaseHandler.getAllBanks();
-        for (int j = 0; j < banks.size(); j++) {
-
-            if (banks.get(j).getName() == message.getSender()) {
-                transaction.setBankId(banks.get(j).getId());
-            }
-        }*/
-
-        /** Сообщение от такого банка ещё не поступало */
-        if (transaction.getId() < 0) {
-            m_databaseHandler.addBank("Unknown" ,message.getSender());
-        }
-
-        List<BankTransactionTypeKeyword> keywords
-                = m_databaseHandler.getAllTransactionTypeKeywords();
-
-        /** Список слов сообщения */
-        List<String> words = new ArrayList<String>();
-
-        StringTokenizer token = new StringTokenizer(message.getContent());
-        while (token.hasMoreTokens()) {
-            words.add(token.nextToken());
-        }
-
-        /* Находим сумму с помощью Regex
-        как дробное число с двумя знаками после запятой */
-        Pattern pattern = Pattern.compile("([0-9]*(\\.|\\,)[0-9]{1,2})");
-        Matcher m = pattern.matcher(message.getContent());
-        if (m.matches())
-        {
-            transaction.setSum(Float.parseFloat(m.group(0)));
-        }
-        else
-        {
-            // TODO: Подумать на тем, как сообщать о том, что не удалось найти сумму
-            Log.e("SmsMonitor","Не удалось найти сумму транзакции в сообщении");
-            return message;
-        }
-
-        /** Перебираем содержимое сообщения по словам */
-        for (int i = 0; i < words.size(); i++) {
-
-            String word = words.get(i);
-
-            for (int j = 0; j < keywords.size(); j++) {
-
-                BankTransactionTypeKeyword keyword = keywords.get(j);
-                if (keyword.getWord() == word) {
-
-                    BankTransactionType type = m_databaseHandler
-                            .getBankTransactionType(keyword.getTransactionTypeId());
-
-
-                    message.setParsed(true);
-                    break;
-                }
-            }
-        }
-
-        /** Тип транцакции не найден */
-        if (transaction.getTypeId() < 0) {
-
-            // TODO: установить имя типа транцакции
-            long typeId = m_databaseHandler.addBankTransactionType("?????????????");
-
-            /** Записываем новые ключевые слова для созданного типа */
-            for (int i = 0; i < words.size(); i++) {
-                m_databaseHandler.addTransactionTypeKeyword(words.get(i), typeId);
-            }
-        }
-
-        return message;
-    }
-
-    /**
      * Выводит оповещение пользователю
      * @param context контекст
      * @param _title заголовок оповещения
@@ -245,27 +144,7 @@ public class SmsMonitor extends BroadcastReceiver {
             if (messages == null) {
                 return;
             }
-            new Runnable() {
-                @Override
-                public void run() {
-                    /*ISmsParser parser = new FakeParser();
-                    BankMessage parsedMessage = parser.Parse(messages);
-                    if (parsedMessage != null) {
-                        // Сохранить в БД
-<<<<<<< HEAD
-                        // TODO: написать сохранение в БД
-                    }*/
-/*
-                        DatabaseHandler db = new DatabaseHandler(context);
-                        try {
-                            db.addBankMessage(parsedMessage);
-                        }
-                        catch (DatabaseHandlerException e) {
-                            Log.e(TAG, SAVE_ERROR_STRING, e);
-                        }
-                    }*/
-                }
-            }.run();
+            new SmsHandler(messages, context).run();
         }
     }
 }

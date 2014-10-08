@@ -24,7 +24,7 @@ public class BankTransaction extends DatabaseObject {
     KEY_DESTINATION = "destination";
 
     /** */
-    private float mSum;
+    private double mSum;
 
     /** */
     private long mTypeId;
@@ -42,6 +42,14 @@ public class BankTransaction extends DatabaseObject {
         mSum = 0.0f;
         mTypeId = -1;
         mCardId = -1;
+    }
+
+    public BankTransaction(long cardId, long typeId, String dest, double sum){
+        super();
+        mCardId = cardId;
+        mTypeId = typeId;
+        mDestination = dest;
+        mSum = sum;
     }
 
     /**
@@ -81,7 +89,7 @@ public class BankTransaction extends DatabaseObject {
      *
      * @return
      */
-    public float getSum() {
+    public double getSum() {
 
         return mSum;
     }

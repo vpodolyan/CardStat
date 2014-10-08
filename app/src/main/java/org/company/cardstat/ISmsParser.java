@@ -8,5 +8,5 @@ import android.telephony.SmsMessage;
 public interface ISmsParser {
 
     /** */
-    public ParsedMessage Parse(SmsMessage message) throws ParseSmsException;
+    public ParsedMessage Parse(String message) throws ParseSmsException;
 }
