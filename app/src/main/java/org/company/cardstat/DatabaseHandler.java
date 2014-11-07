@@ -73,6 +73,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         _database.execSQL(CREATE_TRANSACTION_TABLE);
         _database.execSQL(CREATE_TRANSACTION_TYPE_TABLE);
         _database.execSQL(CREATE_TRANSACTION_TYPE_KEYWORD_TABLE);
+
+        try {
+            addBankTransactionType("POKUPKA");
+        } catch (DatabaseHandlerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -650,7 +656,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return ID транзакции
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    public long addBankTransaction(float _sum, long _type_id, long _card_id)
+    public long addBankTransaction(double _sum, long _type_id, long _card_id)
             throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -764,7 +770,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return  ID транзакции
      * @throws org.company.cardstat.DatabaseHandlerException
      */
-    public long updateBankTransaction(long _id, float _sum, long _type_id, long _card_id)
+    public long updateBankTransaction(long _id, double _sum, long _type_id, long _card_id)
             throws DatabaseHandlerException {
 
         SQLiteDatabase database = this.getWritableDatabase();

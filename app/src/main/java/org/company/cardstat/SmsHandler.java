@@ -35,7 +35,7 @@ public class SmsHandler implements Runnable {
             msg = parser.Parse(body);
         }
         catch (Exception e) {
-            Log.e("CardStat", "Parse sms error! Exception " + e.getMessage());
+            Log.e("CardStat", "SMS parsing error! Exception " + e.getMessage());
             return;
         }
         // Создать транзакцию и добавить в БД

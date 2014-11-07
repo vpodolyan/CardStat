@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 
 import static android.provider.Telephony.Sms.Intents.getMessagesFromIntent;
@@ -91,7 +90,7 @@ public class SmsMonitor extends BroadcastReceiver {
     private void showSmsNotification(final Context context, String _title, String _content) {
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context, MyActivity.class), 0);
+                new Intent(context, MainActivity.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
@@ -131,19 +130,15 @@ public class SmsMonitor extends BroadcastReceiver {
         if (intent != null && intent.getAction() != null
                 && ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
 
-            showSmsNotification(context, MyActivity.APPLICATION_NAME,
+            showSmsNotification(context, "CardStat",
                     "Обработка входящих сообщений");
 
             final SmsMessage[] messages = getMessagesFromIntent(intent);
             for (int i = 0; i < messages.length; i++) {
-
                 printSmsMessage(messages[i]);
-                // TODO: parseSmsMessage(messages[i]);
             }
 
-            if (messages == null) {
-                return;
-            }
+            // Parse sms and put transaction in DB
             new SmsHandler(messages, context).run();
         }
     }

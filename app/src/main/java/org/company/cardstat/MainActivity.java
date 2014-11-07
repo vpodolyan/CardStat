@@ -5,29 +5,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.company.cardstat.domain.*;
+import org.company.cardstat.domain.Bank;
+import org.company.cardstat.domain.BankMessage;
+import org.company.cardstat.domain.BankTransaction;
+import org.company.cardstat.domain.TransactionType;
 
 import java.util.List;
 
 
-public class MyActivity extends Activity {
+public class MainActivity extends Activity {
 
-    /** */
-    public static String APPLICATION_NAME = "CardStat";
-
-    /** */
     private DatabaseHandler m_databaseHandler;
-
-    /** */
-    private SmsMonitor m_smsMonitor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // m_smsMonitor = new SmsMonitor(this);
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my);
+        setContentView(R.layout.activity_main);
 
         m_databaseHandler = new DatabaseHandler(this);
         if (m_databaseHandler != null) {
@@ -64,14 +57,13 @@ public class MyActivity extends Activity {
         } catch (DatabaseHandlerException exception) {
             exception.printStackTrace();
         }
-
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
