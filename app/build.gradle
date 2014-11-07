@@ -24,6 +24,7 @@ dependencies {
     compile ('junit:junit:4.11') {
         exclude group: 'org.hamcrest'
     }
+    compile 'com.android.support:support-v4:+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
